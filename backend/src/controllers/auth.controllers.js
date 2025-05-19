@@ -2,6 +2,8 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
+import sendEmail from '../lib/mailer.js';
+
 
 export const signup = async (req,res) => {
     const {fullName , email, password}= req.body
@@ -31,6 +33,12 @@ export const signup = async (req,res) => {
             // generate jwt token here
             generateToken(newUser._id, res);
             await newUser.save();
+
+            await sendEmail({
+                to: newUser.email,
+                subject: 'Welcome to Amigo!',
+                html: `<h2>Hello, ${newUser.fullName}!</h2><p>Thanks for registering on Amigo 💬</p>`,
+              });
       
             res.status(201).json({
               _id: newUser._id,
@@ -125,3 +133,4 @@ export const checkAuth=(req,res) => {
         res.status(500).json({ message: "Internal Server Error" });
     } 
 }
+

@@ -15,4 +15,5 @@ router.put("/update-profile", protectRoute, updateProfile);
 router.get("/check", protectRoute , checkAuth);  //when we refresh then we need to check authentication of user
 
 
+
 export default router;
